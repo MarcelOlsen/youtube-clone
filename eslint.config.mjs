@@ -7,6 +7,8 @@ const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
+  plugins: ["prettier-plugin-tailwindcss"],
+  tailwindConfig: "./tailwind.css",
 });
 
 const eslintConfig = [
