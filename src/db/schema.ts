@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 
 // This will always be fired only by clerk, so we can throw the clerkId into here
 export const users = pgTable("users", {
@@ -46,6 +47,10 @@ export const videos = pgTable("videos", {
   createdAt: timestamp().defaultNow().notNull(),
   updatedAt: timestamp().defaultNow().notNull()
 })
+
+export const videoInsertSchema = createInsertSchema(videos)
+export const videoUpdateSchema = createUpdateSchema(videos)
+export const videoSelectSchema = createSelectSchema(videos)
 
 export const userRelations = relations(users, ({ many }) => ({
   videos: many(videos)

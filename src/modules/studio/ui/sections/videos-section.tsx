@@ -1,11 +1,13 @@
 'use client'
 
 import { format } from "date-fns"
+import { Globe2Icon, LockIcon } from "lucide-react"
 import Link from "next/link"
 import { Suspense } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 
 import { InfiniteScroll } from "@/components/infinite-scroll"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -19,16 +21,69 @@ import { DEFAULT_LIMIT } from "@/constants"
 import { snakeCaseToTitle } from "@/lib/utils"
 import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail"
 import { trpc } from "@/trpc/client"
-import { toSnakeCase } from "drizzle-orm/casing"
-import { Globe2Icon, LockIcon } from "lucide-react"
 
 export const VideosSection = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<VideosSectionSkeleton />}>
       <ErrorBoundary fallback={<div>Error</div>}>
         <VideosSectionSuspense />
       </ErrorBoundary>
     </Suspense>
+  )
+}
+
+const VideosSectionSkeleton = () => {
+  return (
+    <>
+      <div className="border-y">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="pl-6 w-[510px]">Video</TableHead>
+              <TableHead>Visibility</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Views</TableHead>
+              <TableHead className="text-right">Comments</TableHead>
+              <TableHead className="text-right pr-6">Likes</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <TableRow key={index}>
+                <TableCell className="pl-6">
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="h-20 w-36" />
+                    <div className="flex flex-col gap-2">
+                      <Skeleton className="h-4 w-[100px]" />
+                      <Skeleton className="h-3 w-[150px]" />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-20 h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-12 h-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-24 h-4" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <Skeleton className="w-12 h-4 ml-auto" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <Skeleton className="w-12 h-4 ml-auto" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <Skeleton className="w-12 h-4 ml-auto pr-6" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   )
 }
 
@@ -58,7 +113,7 @@ const VideosSectionSuspense = () => {
             {videos.pages.flatMap((page) => page.items).map((video) => (
               <Link href={`/studio/videos/${video.id}`} key={video.id} legacyBehavior>
                 <TableRow className="cursor-pointer">
-                  <TableCell>
+                  <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
                       <div className="relative aspect-video w-36 shrink-0">
                         <VideoThumbnail
@@ -81,7 +136,7 @@ const VideosSectionSuspense = () => {
                       ) : (
                         <Globe2Icon className="size-4 mr-2" />
                       )}
-                      {toSnakeCase(video.visibility)}
+                      {snakeCaseToTitle(video.visibility)}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -92,13 +147,13 @@ const VideosSectionSuspense = () => {
                   <TableCell className="text-sm truncate">
                     {format(new Date(video.createdAt), "d MMM yyyy")}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right text-sm">
                     views
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right text-sm">
                     comments
                   </TableCell>
-                  <TableCell className="text-right pr-6">
+                  <TableCell className="text-right text-sm pr-6">
                     likes
                   </TableCell>
                 </TableRow>
