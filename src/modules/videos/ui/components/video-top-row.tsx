@@ -17,14 +17,14 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact"
-    }).format(1755)
-  }, [])
+    }).format(video.viewCount)
+  }, [video.viewCount])
 
   const expandedViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "standard"
-    }).format(1755)
-  }, [])
+    }).format(video.viewCount)
+  }, [video.viewCount])
 
   const compactDate = useMemo(() => {
     return formatDistanceToNow(new Date(video.createdAt), { addSuffix: true })
