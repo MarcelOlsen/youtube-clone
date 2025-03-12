@@ -11,6 +11,8 @@ const Page = async ({ params }: PageProps) => {
   const { videoId } = await params;
 
   void trpc.videos.getOne.prefetch({ id: videoId })
+  //TODO: don't forget to change to prefetchInfinite, because we need infinite scroll on comments
+  void trpc.comments.getMany.prefetch({ videoId })
 
   return (
     <HydrateClient>
