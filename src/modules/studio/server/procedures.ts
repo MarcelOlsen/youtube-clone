@@ -58,11 +58,11 @@ export const studioRouter = createTRPCRouter({
         .limit(limit + 1) // Checking if there's another video, to know if there's more data to fetch
 
       const hasMore = data.length > limit;
-      // Removing the extra item, which we used to check if there's more data available
 
+      // Removing the extra item, which we used to check if there's more data available
       const items = hasMore ? data.slice(0, -1) : data
 
-      // The next cursor needs to be s4et to the "real" last item
+      // The next cursor needs to be set to the "real" last item
       const lastItem = items[items.length - 1]
       const nextCursor = hasMore ? {
         id: lastItem.id,
