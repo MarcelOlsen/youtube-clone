@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { APP_URL } from "@/constants";
 
 export const SearchInput = () => {
   const [value, setValue] = useState<string>("");
@@ -13,7 +14,7 @@ export const SearchInput = () => {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const url = new URL("/search", process.env.VERCEL_URL || "http://localhost:3000");
+    const url = new URL("/search", APP_URL);
     const newQuery = value.trim();
 
     url.searchParams.set("query", encodeURIComponent(newQuery));

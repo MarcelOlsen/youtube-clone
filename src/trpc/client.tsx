@@ -7,6 +7,7 @@ import { createTRPCReact } from '@trpc/react-query';
 import { useState } from 'react';
 import superjson from 'superjson';
 
+import { APP_URL } from '@/constants';
 import { makeQueryClient } from './query-client';
 import type { AppRouter } from './routers/_app';
 
@@ -24,8 +25,7 @@ function getQueryClient() {
 function getUrl() {
   const base = (() => {
     if (typeof window !== 'undefined') return '';
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return 'http://localhost:3000';
+    return APP_URL;
   })();
   return `${base}/api/trpc`;
 }

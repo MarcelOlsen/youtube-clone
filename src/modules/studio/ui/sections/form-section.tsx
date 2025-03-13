@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { APP_URL } from "@/constants";
 import { videoUpdateSchema } from "@/db/schema";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { THUMBNAIL_FALLBACK } from "@/modules/videos/constants";
@@ -196,7 +197,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
     update.mutateAsync(data)
   }
-  const fullUrl = `${process.env.VERCEL_URL || "https://localhost:3000"}/videos/${videoId}`
+  const fullUrl = `${APP_URL}/videos/${videoId}`
   const [isCopied, setIsCopied] = useState(false)
 
   const onCopy = async () => {
