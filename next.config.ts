@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
         hostname: "e1b9ih0fkn.ufs.sh",
       }
     ],
-  }
+  },
+  experimental: {
+    typedRoutes: true,
+  },
 };
 
 export default nextConfig;
