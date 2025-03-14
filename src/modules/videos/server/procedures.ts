@@ -1,4 +1,4 @@
-import { and, eq, getTableColumns, inArray, isNotNull } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, isNotNull, lt, or } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
 import { z } from "zod";
 
@@ -136,6 +136,75 @@ export const videosRouter = createTRPCRouter({
       const nextCursor = hasMore ? {
         id: lastItem.id,
         updatedAt: lastItem.updatedAt
+      } : null
+
+      return {
+        items,
+        nextCursor
+      };
+    }),
+  getManyTrending: baseProcedure
+    .input(z.object({
+      cursor: z.object({
+        id: z.string().uuid(),
+        viewCount: z.number(),
+      }).nullish(),
+      limit: z.number().min(1).max(100),
+    }))
+    .query(async ({ input }) => {
+      const { cursor, limit } = input
+
+      const viewCountSubquery = db.$count(
+        videoViews,
+        eq(videoViews.videoId, videos.id)
+      )
+
+      const data = await db
+        .select({
+          ...getTableColumns(videos),
+          viewCount: viewCountSubquery,
+          likeCount: db.$count(videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "like")
+            )
+          ),
+          dislikeCount: db.$count(videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "dislike")
+            )
+          ),
+          user: users
+        }
+        )
+        .from(videos)
+        .innerJoin(users, eq(videos.userId, users.id))
+        .where(
+          and(
+            eq(videos.visibility, "public"),
+            cursor ? or(
+              lt(viewCountSubquery, cursor.viewCount),
+              and(
+                eq(viewCountSubquery, cursor.viewCount),
+                lt(videos.id, cursor.id)
+              )
+            ) : undefined
+          )
+        )
+        .orderBy(desc(viewCountSubquery), desc(videos.id))
+        .limit(limit + 1) // Checking if there's another video, to know if there's more data to fetch
+
+      const hasMore = data.length > limit;
+
+      // Removing the extra item, which we used to check if there's more data available
+      const items = hasMore ? data.slice(0, -1) : data
+
+      // The next cursor needs to be set to the "real" last item
+      const lastItem = items[items.length - 1]
+      const nextCursor = hasMore ? {
+        id: lastItem.id,
+        viewCount: lastItem.viewCount
       } : null
 
       return {
