@@ -212,6 +212,77 @@ export const videosRouter = createTRPCRouter({
         nextCursor
       };
     }),
+  getManySubscribed: protectedProcedure
+    .input(z.object({
+      cursor: z.object({
+        id: z.string().uuid(),
+        updatedAt: z.date(),
+      }).nullish(),
+      limit: z.number().min(1).max(100),
+    }))
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input
+      const { id: userId } = ctx.user
+
+      const viewerSubscriptions = db.$with("viewer_subscriptions").as(
+        db
+          .select({
+            userId: subscriptions.creatorId
+          })
+          .from(subscriptions)
+          .where(eq(subscriptions.viewerId, userId))
+      )
+
+      const data = await db
+        .with(viewerSubscriptions)
+        .select({
+          ...getTableColumns(videos),
+          viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
+          likeCount: db.$count(videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "like")
+            )
+          ),
+          dislikeCount: db.$count(videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "dislike")
+            )
+          ),
+          user: users
+        }
+        )
+        .from(videos)
+        .innerJoin(users, eq(videos.userId, users.id))
+        .innerJoin(viewerSubscriptions, eq(viewerSubscriptions.userId, users.id))
+        .where(
+          and(
+            eq(videos.visibility, "public"),
+            cursor ? or(
+              lt(videos.updatedAt, cursor.updatedAt),
+              and(
+                eq(videos.updatedAt, cursor.updatedAt),
+                lt(videos.id, cursor.id)
+              )
+            ) : undefined
+          )
+        )
+        .orderBy(desc(videos.updatedAt), desc(videos.id))
+        .limit(limit + 1) // Checking if there's another video, to know if there's more data to fetch
+
+      const hasMore = data.length > limit;
+
+      // Removing the extra item, which we used to check if there's more data available
+      const items = hasMore ? data.slice(0, -1) : data
+
+      // The next cursor needs to be set to the "real" last item
+      const lastItem = items[items.length - 1]
+      const nextCursor = hasMore ? {
+        id: lastItem.id,
+        updatedAt: lastItem.updatedAt
+      } : null
+
       return {
         items,
         nextCursor
