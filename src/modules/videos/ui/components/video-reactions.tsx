@@ -15,7 +15,6 @@ interface VideoReactionsProps {
   viewerReaction: VideoGetOneOutput["viewerReaction"];
 }
 
-//TODO: properly implement video reactions
 export const VideoReactions = ({ videoId, likes, dislikes, viewerReaction }: VideoReactionsProps) => {
   const clerk = useClerk();
   const utils = trpc.useUtils()
@@ -23,7 +22,7 @@ export const VideoReactions = ({ videoId, likes, dislikes, viewerReaction }: Vid
   const like = trpc.videoReactions.like.useMutation({
     onSuccess: () => {
       utils.videos.getOne.invalidate({ id: videoId })
-      //TODO: invalidate "liked" playlist later
+      utils.playlists.getLiked.invalidate()
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
@@ -34,7 +33,7 @@ export const VideoReactions = ({ videoId, likes, dislikes, viewerReaction }: Vid
   const dislike = trpc.videoReactions.dislike.useMutation({
     onSuccess: () => {
       utils.videos.getOne.invalidate({ id: videoId })
-      //TODO: invalidate "liked" playlist later
+      utils.playlists.getLiked.invalidate()
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
