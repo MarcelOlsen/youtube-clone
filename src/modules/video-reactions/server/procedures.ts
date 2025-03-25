@@ -18,7 +18,8 @@ export const videoReactionsRouter = createTRPCRouter({
         .where(
           and(
             eq(videoReactions.userId, userId),
-            eq(videoReactions.type, "like")
+            eq(videoReactions.type, "like"),
+            eq(videoReactions.videoId, videoId),
           )
         )
 
@@ -65,7 +66,8 @@ export const videoReactionsRouter = createTRPCRouter({
         .where(
           and(
             eq(videoReactions.userId, userId),
-            eq(videoReactions.type, "dislike")
+            eq(videoReactions.type, "dislike"),
+            eq(videoReactions.videoId, videoId),
           )
         )
 

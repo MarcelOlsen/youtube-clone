@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { and, desc, eq, lt, or } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm";
 
 import { db } from "@/db";
-import { videos } from "@/db/schema";
+import { comments, users, videoReactions, videos, videoViews } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 
@@ -42,18 +42,33 @@ export const studioRouter = createTRPCRouter({
       const { user: { id: userId } } = ctx
 
       const data = await db
-        .select()
-        .from(videos)
-        .where(and(
-          eq(videos.userId, userId),
-          cursor ? or(
-            lt(videos.updatedAt, cursor.updatedAt),
+        .select({
+          ...getTableColumns(videos),
+          user: users,
+          viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
+          commentCount: db.$count(comments, eq(comments.videoId, videos.id)),
+          likeCount: db.$count(
+            videoReactions,
             and(
-              eq(videos.updatedAt, cursor.updatedAt),
-              lt(videos.id, cursor.id)
+              eq(videoReactions.type, "like"),
+              eq(videoReactions.userId, userId),
             )
-          ) : undefined
-        ))
+          )
+        })
+        .from(videos)
+        .innerJoin(users, eq(videos.userId, users.id))
+        .where(
+          and(
+            eq(videos.userId, userId),
+            cursor ? or(
+              lt(videos.updatedAt, cursor.updatedAt),
+              and(
+                eq(videos.updatedAt, cursor.updatedAt),
+                lt(videos.id, cursor.id)
+              )
+            ) : undefined
+          )
+        )
         .orderBy(desc(videos.updatedAt), desc(videos.id))
         .limit(limit + 1) // Checking if there's another video, to know if there's more data to fetch
 
