@@ -11,16 +11,16 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   //TODO: add banner fields
   imageUrl: text("image_url").notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [uniqueIndex("clerk_id_idx").on(t.clerkId)])
 
 export const categories = pgTable("categories", {
   id: uuid().primaryKey().defaultRandom(),
   name: text("name").notNull().unique(),
   description: text("description"),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [uniqueIndex("name_idx").on(t.name)])
 
 export const videoVisibility = pgEnum("video_visibility", [
@@ -48,8 +48,8 @@ export const videos = pgTable("videos", {
     onDelete: "cascade"
   }).notNull(),
   categoryId: uuid("category_id").references(() => categories.id),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 })
 
 export const videoInsertSchema = createInsertSchema(videos)
@@ -78,8 +78,8 @@ export const subscriptions = pgTable("subscriptions", {
   creatorId: uuid("creator_id").references(() => users.id, {
     onDelete: "cascade"
   }).notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [
   primaryKey({
     name: "subscriptions_pk",
@@ -125,8 +125,8 @@ export const comments = pgTable("comments", {
   userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
   videoId: uuid("video_id").references(() => videos.id, { onDelete: "cascade" }).notNull(),
   value: text("value").notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => {
   return [
     foreignKey({
@@ -165,8 +165,8 @@ export const commentReactions = pgTable("comment_reactions", {
   userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
   commentId: uuid("comment_id").references(() => comments.id, { onDelete: "cascade" }).notNull(),
   type: reactionTypes("type").notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [
   primaryKey({
     name: "comment_reactions_pk",
@@ -195,8 +195,8 @@ export const videoViews = pgTable("video_views", {
   videoId: uuid("video_id").references(() => videos.id, {
     onDelete: "cascade"
   }).notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [
   primaryKey({
     name: "video_views_pk",
@@ -230,8 +230,8 @@ export const videoReactions = pgTable("video_reactions", {
     onDelete: "cascade"
   }).notNull(),
   type: reactionTypes("type").notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [
   primaryKey({
     name: "video_reactions_pk",
@@ -265,20 +265,19 @@ export const playlists = pgTable("playlists", {
   userId: uuid("user_id").references(() => users.id, {
     onDelete: "cascade"
   }).notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 })
 
-export const playlistVideos = pgTable("playlists_videos", {
+export const playlistVideos = pgTable("playlist_videos", {
   playlistId: uuid("playlist_id").references(() => playlists.id, {
     onDelete: "cascade"
   }).notNull(),
-  position: integer("position").notNull(),
   videoId: uuid("video_id").references(() => videos.id, {
     onDelete: "cascade"
   }).notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp().defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 }, (t) => [
   primaryKey({
     name: "playlist_videos_pk",
