@@ -18,7 +18,6 @@ const Page = async ({ params }: PageProps) => {
   return (
     <HydrateClient>
       <UserView userId={userId} />
-      <VideosSection userId={userId} />
     </HydrateClient>
   );
 };
