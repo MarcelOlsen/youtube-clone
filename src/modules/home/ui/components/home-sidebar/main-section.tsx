@@ -48,7 +48,7 @@ export const MainSection = () => {
                   }
                 }}
               >
-                <Link href={item.url}>
+                <Link prefetch href={item.url}>
                   <item.icon />
                   <span className="text-sm">{item.title}</span>
                 </Link>

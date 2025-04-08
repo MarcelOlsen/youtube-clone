@@ -3,8 +3,6 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { HomeNavbar } from "../components/home-navbar"
 import { HomeSidebar } from "../components/home-sidebar"
 
-export const dynamic = 'force-dynamic'
-
 interface HomeLayoutProps {
   children: React.ReactNode
 }

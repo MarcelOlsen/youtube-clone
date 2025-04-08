@@ -372,7 +372,6 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 )}
               />
 
-              {/* TODO: separate the categories to their own suspense */}
               <FormField
                 control={form.control}
                 name="categoryId"
@@ -416,9 +415,9 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                     <div className="flex flex-col gap-y-1">
                       <p className="text-xs text-muted-foreground">Video link</p>
                       <div className="flex items-center gap-x-2">
-                        <Link href={`/videos/${video.id}`}>
+                        <Link prefetch href={`/videos/${video.id}`}>
                           <p className="line-clamp-1 text-sm text-blue-500">
-                            http://localhost:3000/123
+                            {process.env.NEXT_PUBLIC_APP_URL}/videos/{video.id}
                           </p>
                         </Link>
                         <Button

@@ -138,7 +138,6 @@ export const POST = async (request: Request) => {
         asset_id: string;
       };
 
-      // Ts incorrectly says asset_id does not exist
       const assetId = data.asset_id;
       const trackId = data.id;
       const status = data.status;
