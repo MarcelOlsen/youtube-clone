@@ -33,7 +33,7 @@ const PlaylistHeaderSectionSkeleton = () => {
   )
 }
 
-const PlaylistHeaderSectionSuspense = ({ playlistId }: PlaylistHeaderSectionProps) => {§
+const PlaylistHeaderSectionSuspense = ({ playlistId }: PlaylistHeaderSectionProps) => {
   const utils = trpc.useUtils()
   const router = useRouter()
 
