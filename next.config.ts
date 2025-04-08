@@ -1,5 +1,16 @@
 import type { NextConfig } from "next";
 
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://complete-frog-9.clerk.accounts.dev https://challenges.cloudflare.com;
+  connect-src 'self' https://complete-frog-9.clerk.accounts.dev;
+  img-src 'self' https://img.clerk.com;
+  worker-src 'self' blob:;
+  style-src 'self' 'unsafe-inline';
+  frame-src 'self' https://challenges.cloudflare.com;
+  form-action 'self';
+`
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -15,16 +26,8 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [
           {
-            key: "Access-Control-Allow-Origin",
-            value: "https://youtube.marcelolsen.dev",
-          },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, DELETE, OPTIONS",
-          },
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "Content-Type, Authorization",
+            key: 'Content-Security-Policy',
+            value: cspHeader.replace(/\n/g, ''),
           },
         ],
       },
