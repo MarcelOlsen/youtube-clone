@@ -10,7 +10,10 @@ const isProtectedRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) await auth.protect()
 }, {
-  authorizedParties: [process.env.NEXT_PUBLIC_APP_URL || '']
+  authorizedParties: [
+    process.env.NEXT_PUBLIC_APP_URL || '',
+    'https://clerk.youtube.marcelolsen.dev'
+  ]
 });
 
 export const config = {
