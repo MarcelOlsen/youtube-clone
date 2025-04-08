@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YouTube Clone
 
-## Getting Started
+A modern, full-featured YouTube clone built with Next.js, featuring video upload, playback, user authentication, and more.
 
-First, run the development server:
+## 🚀 Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Frontend
+
+- **Next.js 15** - React framework for server-side rendering and static site generation
+- **React 19** - UI library for building user interfaces
+- **Tailwind CSS** - Utility-first CSS framework
+- **Radix UI** - Unstyled, accessible components
+- **tRPC** - End-to-end typesafe APIs
+- **React Query** - Data fetching and state management
+- **Zod** - TypeScript-first schema validation
+
+### Backend
+
+- **tRPC** - Type-safe API layer
+- **Drizzle ORM** - TypeScript ORM for database operations
+- **Neon Database** - Serverless Postgres database
+- **Upstash Redis** - Serverless Redis for caching and rate limiting
+
+### Authentication & Storage
+
+- **Clerk** - Authentication and user management
+- **UploadThing** - File upload service
+- **Mux** - Video streaming and processing
+
+### Development Tools
+
+- **TypeScript** - Static type checking
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Bun** - Fast JavaScript runtime and package manager
+
+## ✨ Features
+
+### Video Management
+
+- 📹 Video upload with progress tracking and Mux integration
+- 🎥 Video playback using Mux player
+- 🏷️ Video categorization with categories
+- 📝 Video descriptions and titles
+- 🔄 Video processing status tracking
+- 🖼️ Custom thumbnail upload and generation
+- 🔒 Video visibility settings (public/private)
+
+### User Features
+
+- 🔐 Authentication with Clerk
+- 👤 User profiles
+- 👍 Video reactions (likes/dislikes)
+- 💬 Comment system
+- 📢 Channel subscriptions
+- 📊 View count tracking
+
+### Content Organization
+
+- 📋 Playlist creation and management
+- 🔍 Search functionality with filters
+- 🏷️ Category-based browsing
+
+### Technical Features
+
+- ⚡ Real-time video processing with Mux
+- 🔒 Secure file uploads with UploadThing
+- 📦 Optimized video delivery with Mux CDN
+- 🛡️ Rate limiting with Upstash Redis
+
+## 🛠️ Project Structure
+
+```
+src/
+├── app/           # Next.js app router pages
+├── components/    # Reusable UI components
+├── db/           # Database schema and migrations
+├── hooks/        # Custom React hooks
+├── lib/          # Utility functions and configurations
+├── modules/      # Feature-specific modules
+├── scripts/      # Development and build scripts
+└── trpc/         # tRPC router and procedures
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js 18+ or Bun
+- A Clerk account for authentication
+- A Mux account for video processing
+- A Neon Database instance
+- An Upstash Redis instance
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+git clone https://github.com/yourusername/youtube-clone.git
+cd youtube-clone
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies:
 
-## Deploy on Vercel
+```bash
+bun install
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Set up environment variables:
+   Create a `.env.local` file with the following variables:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+DATABASE_URL=your_neon_database_url
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+MUX_TOKEN_ID=your_mux_token_id
+MUX_TOKEN_SECRET=your_mux_token_secret
+UPLOADTHING_SECRET=your_uploadthing_secret
+UPLOADTHING_APP_ID=your_uploadthing_app_id
+UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
+```
+
+4. Run database migrations:
+
+```bash
+bun run db:migrate
+```
+
+5. Start the development server:
+
+```bash
+bun run dev
+```
+
+## 🧪 Development
+
+- `bun run dev` - Start the development server
+- `bun run dev:all` - Start development server with webhook support
+- `bun run build` - Build the application for production
+- `bun run start` - Start the production server
+- `bun run lint` - Run ESLint
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [Clerk](https://clerk.com/)
+- [Mux](https://mux.com/)
+- [tRPC](https://trpc.io/)
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [Radix UI](https://www.radix-ui.com/)
