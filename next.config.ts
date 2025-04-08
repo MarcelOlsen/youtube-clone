@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' https://clerk.marcelolsen.dev https://challenges.cloudflare.com;
-  connect-src 'self' https://clerk.marcelolsen.dev;
+  script-src 'self' 'unsafe-inline' https://clerk.youtube.marcelolsen.dev https://challenges.cloudflare.com;
+  connect-src 'self' https://clerk.youtube.marcelolsen.dev;
   img-src 'self' https://img.clerk.com;
   worker-src 'self' blob:;
   style-src 'self' 'unsafe-inline';
